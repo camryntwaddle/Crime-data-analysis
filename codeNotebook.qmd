@@ -16,6 +16,7 @@ format:
 ```{r}
 #| echo: false
 #| message: false
+#| warning: false
 library(tidyverse)
 library(lubridate)
 library(ggplot2)
@@ -37,8 +38,9 @@ library(treemapify)
 -   External population data sourced from: https://data.openup.org.za/dataset/police-district-population-mwzd-ptz7
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 pop_data <- read.csv("data/estimated_population.csv") |> 
   mutate(Station = str_to_title(precinct)) |> 
   select(Station, estimated_population, estimated_male, estimated_female)
@@ -77,8 +79,9 @@ This section aims to provide insight into the state of crime in South African fo
 ### Total crimes per province
 
 ```{r fig.width=6, fig.height=4}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 ggplot(data = crime_rate, aes(x = Year, y = total))+
   geom_point(color = "#003249")+
@@ -100,8 +103,9 @@ The graph above shows the overall crime rate for the whole country of South Afri
 ## Total crimes per province
 
 ```{r fig.height=6}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 ggplot(data = province_crime, 
        aes(x = reorder(Province, total) , y = total)) +
@@ -127,8 +131,9 @@ The above graph represents the total cumulative crime count per province. Gauten
 ### Areas that experience higher crime per province
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 crime_region<- crime_data |>
   group_by(Province, Station) |>
@@ -141,8 +146,9 @@ crime_region
 This table shows the top 10 stations with the highest cumulative crime count per province. \## #Most common crimes in South Africa
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 crime_type<- crime_data |>
   group_by(Category) |>
@@ -155,8 +161,9 @@ crime_type
 This table ranks the crime types from the highest cumulative count to the lowest.
 
 ```{r fig.width=7}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 data <- crime_data |> 
   summarise(total = sum(Count))
@@ -198,16 +205,18 @@ Going forward our hypotheses are as follows: H0: The number of males in a popula
 Our first step into exploring the data is to test for correlation.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 cor(so_data$sexual_offences, so_data$estimated_male)
 ```
 
 The above result shows that the two variables of interest, number of males in population and number of reported sexual offences, is highly positively correlated. The following function gives more insight into this correlation.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 cor.test(so_data$sexual_offences, so_data$estimated_male)
 ```
 
@@ -216,8 +225,9 @@ In the following output shows a t-value of 130,62. This value indicates how far 
 Below are some graphs to visualise these findings.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 so_graph_whole_pop <- so_data |> 
   filter(Year == 2011) |> 
@@ -240,8 +250,9 @@ so_graph_whole_pop
 The above graph shows the correlation between the number of sexual offences reported against the total population, split by province. We can see a common upward trend in most provinces.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 so_graph_one_line <- so_data |> 
   filter(Year == 2011) |> 
@@ -263,8 +274,9 @@ so_graph_one_line
 This graph indicates the correlation between sexual offences and the male population for the country as a whole. This graph supports the statistics that were explored above.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 so_graph_per_province <- so_data |> 
   filter(Year == 2011) |> 
@@ -291,16 +303,18 @@ This graph expands on both previous graphs by exploring the relationships among 
 The first model created is a simple, two variable linear regression.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 summary(lm(sexual_offences ~ estimated_male, data = so_data))
 ```
 
 This summary shows us that the models sees these variables as also having a strong positive correlation as the p-value is less than 0,05. The residual standard error (RSE) suggest that on average the predicted values differ from the observed values at a rate of 41,36 units. Multiple R-squared shows that 61,86% of the predicted variables are explained by the predictors of the model. The F-statistics is the result of an f-test, and shows the overall significance of the model. It tries to explain the variability of the model. Our f-statistic is quite large and therefore the model can handle big variability.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 summary(aov(sexual_offences ~ estimated_male, data = so_data))
 so_data |>
@@ -310,8 +324,9 @@ so_data |>
 The above model is a simplified analysis of variance, which also uses a linear method, and confirms the linear regressions findings.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 test <-aov(sexual_offences ~ estimated_male * Province, data = so_data)
 summary(test)
@@ -324,8 +339,9 @@ The above model has been expanded to investigate whether the province has any si
 The following is a linear regression machine learning model that was trained on a subset of data and then tested on the rest.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 set.seed(177) #for reproducibility
 
 index <- createDataPartition(so_data$sexual_offences, p =0.8, list = FALSE) 
@@ -354,6 +370,9 @@ ggplot(testing, aes(x=sexual_offences,
 The above graph plots the predicted outcomes of the model versus the actual values from the training data. We can see from this graph that the model is relatively accurate the smaller the variables, but gets less accurate as the variables increase. This could be explained by the fact that most of the data lies closer to the origin so training for larger values is difficult.
 
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 summary(model)
 ```
 
@@ -370,8 +389,9 @@ We gave the model a subset of data that included station names, categories of cr
 Our first step into exploring the data is to clean and cut the data. We chose to select a random sample of stations from each province to limit the messiness of out EDA and to test if the model could create cohesive clusters. We once again reduced the data set to 2011. We did this to avoid problems in the modelling and chose 2011 to be consistent with our regression model.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 set.seed(177) #for reproducibility 
 
@@ -404,8 +424,10 @@ crime_data_clust <- na.aggregate(crime_data_clust)
 Our next step is to create and visualise graphs to help build the clustering model.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
+
 set.seed(177)
 distance <- get_dist(crime_data_clust, method = "euclidean")
 
@@ -419,8 +441,9 @@ The above matrix plots the different station against each other. The darker colo
 We ran multiple tests to determine the optimal number of clusters.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 set.seed(177)
 fviz_nbclust(x=crime_data_clust , kmeans, method=c("wss")) +
   scale_y_continuous(labels = scales::comma)+
@@ -434,8 +457,9 @@ fviz_nbclust(x=crime_data_clust , kmeans, method=c("wss")) +
 The above graph uses the data given and the 'elbow' method to guess the optimal number of clusters. This graph seems to indicate that the optimal clusters lies at either 2 or 3.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 set.seed(177)
 fviz_nbclust(x=crime_data_clust , kmeans, method = c("silhouette")) +
   scale_y_continuous(labels = scales::comma)+
@@ -449,8 +473,9 @@ fviz_nbclust(x=crime_data_clust , kmeans, method = c("silhouette")) +
 The above graph uses the data given and the silhouette method to guess the optimal number of clusters. This graph indicates that the optimal clusters is 2.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 set.seed(177)
 gap_stat <- clusGap(crime_data_clust , FUN = kmeans, nstart = 25, K.max = 10, B=50) #compute gap statistic
 
@@ -458,8 +483,9 @@ print(gap_stat, method = "firstmax")
 ```
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 set.seed(177)
 fviz_gap_stat(gap_stat) + 
   theme_ipsum(base_family = "sans")+
@@ -475,8 +501,9 @@ The above table and graph uses the gap statistic method to guess the optimal num
 The following code creates and visualises the clustering model using k-means methods. We decided to set 3 clusters based on the on the previous cluster graphs.
 
 ```{r fig.height=5}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 set.seed(177)
 
 final <- kmeans(crime_data_clust, 3, nstart = 25) 
@@ -494,8 +521,9 @@ The graph above shows the outcome of the k-means clustering model. We can see th
 The following table aims to provide insight into the clusters created from the sample data and why certain stations may have been grouped together. It shows the average of each crime time for each cluster.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 set.seed(177)
 
 clusters_table <- crime_data_clust |> 
@@ -516,8 +544,9 @@ Cluster 3: This cluster has the lowest overall average crime across categories.
 Our goal with our classification model is to investigate whether the model could correctly classify each station into a certain risk category. With this model, we wanted the type of crime to contribute to the crime level, so that an area with 5 murders would not be classified as "less dangerous" than an area with 10 shoplifting reports. In order to take this into account, we consulted SAPS website and classified the crimes into broader categories and assigned each broad category a weight. The process of adding this to our dataset is as follows:
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 # creates crime types for classification
 crime_types <- data_frame (Contact_Crimes_against_an_individual = 
                              c("Murder", "Sexual Offences", "Attempted murder",
@@ -573,8 +602,9 @@ crime_types_long <- crime_types_long |>
 In order to visual the changes we made in a easy to read graph, we decided to cut our dataset down to the province of Gauteng in 2011. This made the data small enough to read the graph, but still include stations in diverse areas. In this chunk we also computed the weighted count of the crimes.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 #reduce dataset
 crime_data_jhb <- crime_data |> 
@@ -590,8 +620,9 @@ crime_data_jhb <- crime_data |>
 When we first explored this idea, we wanted to take district population into account. We computed extra columns calculating the crime per thousand people, as well as the weighted crime per thousand people.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 crime_data_pop_jhb <- crime_data_jhb |>
   group_by(Station) |>
@@ -604,8 +635,9 @@ crime_data_pop_jhb <- crime_data_jhb |>
 ```
 
 ```{r fig.height=6, fig.width=7}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 crime_data_pop_jhb |> 
   ggplot(aes(x=reorder(Station,total_crime), y=total_crime)) +
@@ -625,8 +657,9 @@ crime_data_pop_jhb |>
 The graph above shows the total crime count per district in Gauteng. The graph is ordered from lowest crime areas to highest crime areas. This shows that Gauteng has areas of diverse crime levels.
 
 ```{r fig.height=6,fig.width=7}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 crime_data_pop_jhb |> 
   na.omit() |> 
@@ -647,6 +680,9 @@ crime_data_pop_jhb |>
 The graph above plots the total weighted crime per thousand people per district. As we can see, there is one station that is heavily skewing the data. This is OR Tambo International Airport police station. This high weighted crime rate is due to the fact that many crimes are reported to that station, despite the fact that the actual district population is very low (Around 170 as of the 2011 Census).
 
 ```{r fig.height=6, fig.width=7}
+#| echo: false
+#| message: false
+#| warning: false
 crime_data_pop_jhb |> 
   na.omit() |> 
   filter(Station != "Or Tambo Intern Airp") |> 
@@ -670,8 +706,9 @@ For the graph above, we removed OR Tambo Airport station to show just how skewed
 Below we increased the dataset to include every province in the year 2011, and this is the data we used to train our model.
 
 ```{r}
-#| warning: false
+#| echo: false
 #| message: false
+#| warning: false
 
 crime_data_weight <- crime_data |> 
   left_join(crime_types_long, by = c("Category" = "Crime_Type")) |> 
@@ -681,6 +718,9 @@ crime_data_weight <- crime_data |>
 ```
 
 ```{r fig.height=6, fig.width=7}
+#| echo: false
+#| message: false
+#| warning: false
 crime_data_weight_pop <- crime_data_weight |>
   group_by(Station) |>
   filter(weighted_count != 0) |> 
@@ -708,6 +748,9 @@ The above graph shows the total weighted crime for all stations in the year 2011
 We decided to use the interquartile range to classify the risk levels of each station. Stations with a weighted crime count of greater than the 75% quartile were classified as high risk. Stations with a weighted crime count of less than the 25% quartile were classified as low risk. Every other station was classified as moderate risk.
 
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 #compute quartiles
 quartiles <- quantile(na.omit(crime_data_weight_pop$weighted_count), 
                       probs = c(0.25, 0.5, 0.75))
@@ -734,6 +777,9 @@ crime_data_levels <- crime_data_weight_pop |>
 The dataset is split into 70% train data, and 30% testing data. We used a randome forest classification model since we have 3 categories for it to classify stations into.
 
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 set.seed(177)
 
 #turn categories into factors
@@ -778,10 +824,16 @@ class_model <- train(danger_level ~ all_theft_not_mentioned_elsewhere +
 We then give the model the testing data for it to make predictions.
 
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 predictions <- predict(class_model, newdata = test)
 ```
 
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 cm <- confusionMatrix(predictions, test$danger_level)
 cm
 ```
@@ -789,6 +841,9 @@ cm
 The above output shows the important information about our model. It is 99.62% accurate and has a high confidence interval.
 
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 conf_matrix <- as.data.frame(cm$table)
 ggplot(conf_matrix, aes(x = Prediction, y = Reference, fill = Freq)) +
   geom_tile(color = "white") +
@@ -807,6 +862,9 @@ The above plot is a visual representation of our confusion matrix.
 In order to see how well our model handles a bigger dataset, we tested it on every year except for 2011 (which it was partially trained on). The increase in data only reduced the model accuracy by 0.6%.
 
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 crime_test <- crime_data |> 
   left_join(crime_types_long, by = c("Category" = "Crime_Type")) |> 
   filter(Year != 2011) |> 
@@ -839,11 +897,17 @@ second_predictions <- predict(class_model, newdata = crime_test)
 ```
 
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 cm2 <- confusionMatrix(second_predictions, crime_test$danger_level)
 cm2
 ```
 
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 conf_matrix <- as.data.frame(cm2$table)
 ggplot(conf_matrix, aes(x = Prediction, y = Reference, fill = Freq)) +
   geom_tile(color = "white") +
