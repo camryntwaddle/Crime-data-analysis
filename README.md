@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Welcome to my honours assignment on crime data analysis. This assignment was completed by myself and two other honours students. This repo aims to show my experience with R, exploratory data analysis (EDA), machine learning and data visualisation. This assignment involved using South African crime data to extract meaningful information, explore ways patterns could be discovered and potentially predicted, and finally present the findings in a clear, intuitive manner. This was achieved through collaboration and various analytical techniques. This assignment was initially completed in RStudio using a Quarto notebook.
+Welcome to our honours assignment on crime data analysis. This assignment was completed by myself and two other honours students. This repo aims to show my experience with R, exploratory data analysis (EDA), machine learning and data visualisation. This assignment involved using South African crime data to extract meaningful information, explore the ways patterns could be discovered and potentially predicted, and finally present the findings in a clear, intuitive manner. This was achieved through collaboration and various analytical techniques. This assignment was initially completed in RStudio using a Quarto notebook.
 
 ## Repository Structure
 
