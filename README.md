@@ -43,6 +43,3 @@ This assignment was uploaded as a representation of my EDA and machine learning 
 
 This assignment was completed on 10 May 2024 as part of the Stellenbosch University Bachelor of Informatics Honours program, by myself and two classmates.
 
-### Contact
-
-If you have any questions or would like to contact me, please reach out to me via [LinkedIn](https://www.linkedin.com/in/camryn-twaddle-958a79262/) or [email](cammietwaddle@gmail.com).
